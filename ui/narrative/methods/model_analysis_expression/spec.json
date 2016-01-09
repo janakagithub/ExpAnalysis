@@ -91,7 +91,7 @@
 			"output_mapping": [
 				{
 					"service_method_output_path": [0, "expAnalysis"],
-					"target_property": "exp_analysis"
+					"target_property": "expAnalysis"
 				},
 
 				{
