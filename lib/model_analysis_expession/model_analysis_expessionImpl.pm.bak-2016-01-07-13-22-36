@@ -1,0 +1,827 @@
+package model_analysis_expession::model_analysis_expessionImpl;
+use strict;
+use Bio::KBase::Exceptions;
+# Use Semantic Versioning (2.0.0-rc.1)
+# http://semver.org
+our $VERSION = "0.1.0";
+
+=head1 NAME
+
+model_analysis_expession
+
+=head1 DESCRIPTION
+
+A KBase module: model_analysis_expession
+This module evaluate the reconciliation of expression data against FBA
+
+=cut
+
+#BEGIN_HEADER
+use Bio::KBase::AuthToken;
+use Bio::KBase::workspace::Client;
+use Config::IniFiles;
+use Data::Dumper;
+#END_HEADER
+
+sub new
+{
+    my($class, @args) = @_;
+    my $self = {
+    };
+    bless $self, $class;
+    #BEGIN_CONSTRUCTOR
+
+    my $config_file = $ENV{ KB_DEPLOYMENT_CONFIG };
+    my $cfg = Config::IniFiles->new(-file=>$config_file);
+    my $wsInstance = $cfg->val('model_analysis_expession','workspace-url');
+    die "no workspace-url defined" unless $wsInstance;
+
+    $self->{'workspace-url'} = $wsInstance;
+
+    #END_CONSTRUCTOR
+
+    if ($self->can('_init_instance'))
+    {
+	$self->_init_instance();
+    }
+    return $self;
+}
+
+=head1 METHODS
+
+
+
+=head2 exp_analysis
+
+  $return = $obj->exp_analysis($workspace_name, $fbamodel_id, $fba_ref, $expression_series_ref)
+
+=over 4
+
+=item Parameter and return types
+
+=begin html
+
+<pre>
+$workspace_name is a model_analysis_expession.workspace_name
+$fbamodel_id is a model_analysis_expession.fbamodel_id
+$fba_ref is a model_analysis_expession.fba_ref
+$expression_series_ref is a model_analysis_expession.expression_series_ref
+$return is a model_analysis_expession.PathwayData
+workspace_name is a string
+fbamodel_id is a string
+fba_ref is a string
+expression_series_ref is a string
+PathwayData is a reference to a hash where the following keys are defined:
+	pathways has a value which is a reference to a list where each element is a model_analysis_expession.EachPathway
+EachPathway is a reference to a hash where the following keys are defined:
+	pathwayName has a value which is a string
+	totalModelReactions has a value which is an int
+	totalKEGGRxns has a value which is an int
+	totalRxnFlux has a value which is an int
+	gsrFluxPExpP has a value which is an int
+	gsrFluxPExpN has a value which is an int
+	gsrFluxMExpP has a value which is an int
+	gsrFluxMExpM has a value which is an int
+	gpRxnsFluxP has a value which is an int
+	reaction_list has a value which is a reference to a list where each element is a model_analysis_expession.EachReaction
+EachReaction is a reference to a hash where the following keys are defined:
+	id has a value which is a string
+	name has a value which is a string
+	flux has a value which is a float
+	gapfill has a value which is an int
+	expression has a value which is a float
+	pegs has a value which is a reference to a list where each element is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+$workspace_name is a model_analysis_expession.workspace_name
+$fbamodel_id is a model_analysis_expession.fbamodel_id
+$fba_ref is a model_analysis_expession.fba_ref
+$expression_series_ref is a model_analysis_expession.expression_series_ref
+$return is a model_analysis_expession.PathwayData
+workspace_name is a string
+fbamodel_id is a string
+fba_ref is a string
+expression_series_ref is a string
+PathwayData is a reference to a hash where the following keys are defined:
+	pathways has a value which is a reference to a list where each element is a model_analysis_expession.EachPathway
+EachPathway is a reference to a hash where the following keys are defined:
+	pathwayName has a value which is a string
+	totalModelReactions has a value which is an int
+	totalKEGGRxns has a value which is an int
+	totalRxnFlux has a value which is an int
+	gsrFluxPExpP has a value which is an int
+	gsrFluxPExpN has a value which is an int
+	gsrFluxMExpP has a value which is an int
+	gsrFluxMExpM has a value which is an int
+	gpRxnsFluxP has a value which is an int
+	reaction_list has a value which is a reference to a list where each element is a model_analysis_expession.EachReaction
+EachReaction is a reference to a hash where the following keys are defined:
+	id has a value which is a string
+	name has a value which is a string
+	flux has a value which is a float
+	gapfill has a value which is an int
+	expression has a value which is a float
+	pegs has a value which is a reference to a list where each element is a string
+
+
+=end text
+
+
+
+=item Description
+
+
+
+=back
+
+=cut
+
+sub exp_analysis
+{
+    my $self = shift;
+    my($workspace_name, $fbamodel_id, $fba_ref, $expression_series_ref) = @_;
+
+    my @_bad_arguments;
+    (!ref($workspace_name)) or push(@_bad_arguments, "Invalid type for argument \"workspace_name\" (value was \"$workspace_name\")");
+    (!ref($fbamodel_id)) or push(@_bad_arguments, "Invalid type for argument \"fbamodel_id\" (value was \"$fbamodel_id\")");
+    (!ref($fba_ref)) or push(@_bad_arguments, "Invalid type for argument \"fba_ref\" (value was \"$fba_ref\")");
+    (!ref($expression_series_ref)) or push(@_bad_arguments, "Invalid type for argument \"expression_series_ref\" (value was \"$expression_series_ref\")");
+    if (@_bad_arguments) {
+	my $msg = "Invalid arguments passed to exp_analysis:\n" . join("", map { "\t$_\n" } @_bad_arguments);
+	Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
+							       method_name => 'exp_analysis');
+    }
+
+    my $ctx = $model_analysis_expession::model_analysis_expessionServer::CallContext;
+    my($expAnalysis);
+    #BEGIN exp_analysis
+
+    my $token=$ctx->token;
+    my $wshandle=Bio::KBase::workspace::Client->new($self->{'workspace-url'},token=>$token);
+    my $fm=$wshandle->get_objects([{workspace=>$workspace_name,name=>$fbamodel_id}]);
+    my $fb=$wshandle->get_objects([{workspace=>$workspace_name,name=>$fba_ref}]);
+    my $em=$wshandle->get_objects([{workspace=>$workspace_name,name=>$expression_series_ref}]);
+    my $bc=$wshandle->get_objects([{workspace=>'kbase',name=>'plantdefault_obs'}]);
+
+	my $expAnalysis = {
+    	pathways => []
+    };
+    my %ExpG;
+    my $user_cutoff;
+    my $exp_constant =0.4;
+    my $expS = $em->[0]->{data}->{data};
+    my $conditions= $expS->{col_ids};
+    my $rows = $expS->{row_ids};
+    my $colms = $expS->{values};
+
+    my $user_condition;
+    my $condition;
+    for (my$i=0; $i< @{$conditions}; $i++){
+    	my $each_condition = $conditions->[$i];
+    	if ($user_condition eq $each_condition){
+
+    		$condition = $user_condition;
+    		last;
+       	}
+       	else{
+
+       		$condition = $conditions->[0];
+       	}
+
+    }
+
+    my %tempHash;
+    if (defined $user_cutoff){
+	    for (my$i=0; $i< @{$rows}; $i++){
+	    	my $each_row = $rows->[$i];
+	    	my $each_val = $colms->[$i];
+	    	if ($each_val >= $user_cutoff){
+	            $ExpG{$each_row}= [$each_row,@{$each_val}];
+	        }
+
+	    }
+    }
+    else{
+
+    	for (my$i=0; $i< @{$rows}; $i++){
+	    	my $each_row = $rows->[$i];
+	    	my $each_val = $colms->[$i];
+	    	$tempHash{$each_row} = @{$each_val};
+
+	    }
+
+    	my @eld = sort { $tempHash{$b} <=> $tempHash{$a} } keys %tempHash;
+
+		my $ac = @{$rows};
+		my $count =1;
+		foreach my $k (@eld){
+		    my $nexv= ($ac - $count)/$ac;
+		    if ($nexv >= $exp_constant){
+		    	$ExpG{$k} = [$k,$nexv];
+		    }
+		    $count++;
+		}
+
+    }
+    	my $genepairs;
+    	my $bestorthos = [];
+    my $rxnDB = $bc->[0]->{data}->{reactionSets};
+	my %KGtorxn;
+	my %KM;
+	my %RKM;
+	for (my $i =0; $i < @{$rxnDB}; $i++){
+
+    	my $pathwayName = $rxnDB->[$i]->{name};
+	    my $id = $rxnDB->[$i]->{id};
+	    my $class = $rxnDB->[$i]->{class};
+	    my $pathwayType = $rxnDB->[$i]->{type};
+	    my $r = $rxnDB->[$i]->{reaction_refs};
+
+	    if ($pathwayType =~ /KEGG/){
+	    	#print "$pathwayType\t$pathwayName\n";
+	    		my @tempRxn;
+	    		for (my $j =0; $j < @{$r}; $j++){
+	       			my $eachRxn = $r->[$j];
+
+	        		my @rr = split /\//, $eachRxn;
+	        		my $rxn = $rr[-1];
+	        		#print "$pathwayType\t$pathwayName\t$id\t$rxn\n";
+
+	        		$KGtorxn{$id}->{$rxn} = $pathwayName;
+	        		$KM{$id} = $pathwayName;
+	        		$RKM{$rxn}=0;
+	        		push (@tempRxn, $rxn);
+
+
+	    		}
+		}
+    #print "$pathwayType\t$pathwayName\t$id\t$class\t$rxn_String\n";
+	}
+
+	my %mRxns;
+	my %rCheck;
+	my $fba_ob = $fb->[0]->{data}->{FBAReactionVariables};
+	my $rxnCheck = $fm->[0]->{data}->{modelreactions};
+
+	for (my $i =0; $i < @{$rxnCheck}; $i++){
+
+       	my $r_id = $rxnCheck->[$i]->{id};
+       	my $r = $rxnCheck->[$i]->{reaction_ref};
+       	my @rrr = split /_/, $r_id;
+        my $rAlias = $rrr[0];
+         my @rr = split /\//, $r;
+	    my @mrr = split /_/, $rr[-1];
+	    my $mRxn = $mrr[0];
+	    $rCheck{$rAlias} = $mRxn;
+
+    }
+	for (my $i =0; $i < @{$fba_ob}; $i++){
+
+	    my $flux = $fba_ob->[$i]->{value};
+	    my $min = $fba_ob->[$i]->{min};
+	    my $class = $fba_ob->[$i]->{class};
+	    my $max = $fba_ob->[$i]->{max};
+	    my $r = $fba_ob->[$i]->{modelreaction_ref};
+	    my @rr = split /\//, $r;
+	    my @rrr = split /_/, $rr[-1];
+	    my $rxn = $rrr[0];
+	    my $tR = $rCheck{$rxn};
+
+	    if (exists $rCheck{$rxn} && $tR ne 'rxn00000'){
+	    	#print "exist\t$i\t$tR\n";
+	    	$mRxns{$tR} = [$flux,$min,$max,$rxn,$class];
+	    }
+	    else{
+	    	$mRxns{$rxn} = [$flux,$min,$max,$rxn,$class];
+	    	#print "not exist \t $i\t$tR\t$rxn\n"
+	    }
+	    #print "$flux\t$min\t$max\t$rxn\t$class\n";
+
+	}
+
+	my $rxnInfo = $fm->[0]->{data}->{modelreactions};
+
+	my %mGenes;
+	my %rGenes;
+	my %gGenesPlus;
+	my %gGenesMinus;
+	my %rGenesMinus;
+	my %rGenesPlus;
+	my %reaction_name;
+	my $flux_threshold = 0.000000001;
+
+	for (my $i =0; $i < @{$rxnInfo}; $i++){
+
+       	my $rP = $rxnInfo->[$i]->{modelReactionProteins};
+        my $r_id = $rxnInfo->[$i]->{reaction_ref};
+        my $r_name = $rxnInfo->[$i]->{name};
+          my @rr = split /\//, $r_id;
+	    my @mrr = split /_/, $rr[-1];
+        my $rxn = $mrr[0];
+        #print "$i\t$rxn\t$r_name\n";
+        $reaction_name{$rxn} = $r_name;
+	    for (my $j =0; $j < @{$rP}; $j++){
+	       my $rSU= $rP->[$j]->{modelReactionProteinSubunits};
+	        for (my $k =0; $k < @{$rSU}; $k++){
+	           my $pL = $rSU->[$k]->{feature_refs};
+
+	            for (my $p =0; $p < @{$pL}; $p++){
+	               	my $peg = $pL->[$p];
+	               	print "$rxn\t$peg\n";
+	                my @pp = split /\//, $peg;
+	                if (defined $peg){
+	                	push (@{$mGenes{$rxn}}, $pp[-1]);
+	                }
+	            }
+
+			}
+
+	    }
+
+
+	  if (exists $mRxns{$rxn} && abs($mRxns{$rxn}->[0]) >= $flux_threshold && defined $mGenes{$rxn} ){
+	    my $pegL = join(";", @{$mGenes{$rxn}});
+	    my $expResult = evalExp($mGenes{$rxn});
+	    $rGenesPlus{$rxn} = [$expResult,$pegL,$mRxns{$rxn}->[0]];
+
+	  }
+	  elsif (exists $mRxns{$rxn} && abs($mRxns{$rxn}->[0]) < $flux_threshold && defined $mGenes{$rxn} ){
+	    my $pegL = join(";", @{$mGenes{$rxn}});
+	    my $expResult = evalExp($mGenes{$rxn});
+	    $rGenesMinus{$rxn} = [$expResult,$pegL,$mRxns{$rxn}->[0]];
+	  }
+	  elsif (exists $mRxns{$rxn} && abs($mRxns{$rxn}->[0]) >= $flux_threshold ){
+	       	$gGenesPlus{$rxn} = [1,$mRxns{$rxn}->[0]];
+	   }
+	  else {
+	        $gGenesMinus{$rxn} = [0,$mRxns{$rxn}->[0]];
+	   }
+
+	}
+
+
+	my $output = {
+    	pathwayName => "",
+    	totalModelReactions => 0,
+    	totalKEGGRxns => 0,
+	    totalRxnFlux => 0,
+	    gsrFluxPExpP => 0,
+	    gsrFluxPExpN => 0,
+	    gsrFluxMExpP => 0,
+	    gsrFluxMExpM => 0,
+	    gpRxnsFluxP => 0,
+    	reaction_list => []
+    };
+
+	my $er = {
+    		id => "",
+    		name => "",
+    		flux => 0,
+    		gapfill => 0,
+    		expression => 0,
+    		pegs => []
+    };
+
+
+	my $fx=0;
+	my $kfx =0;
+	my $kfx1 =0;
+	my $kfx2 =0;
+	my $kfx3 =0;
+	my $kfx4 =0;
+	my $kfx5 =0;
+	my $kfx6 =0;
+	my $kc =0;
+	my $kce =0;
+	my $count=0;
+
+die;
+	foreach my $k (sort keys(%KGtorxn))
+	{
+		$output = {};
+	    foreach my $k2 (keys(%{$KGtorxn{$k}}))
+	    {
+	    	#here is the problem,
+
+
+	       	if (exists $mRxns{$k2} && abs($mRxns{$k2}->[0]) >= $flux_threshold && exists $rGenesPlus{$k2} && $rGenesPlus{$k2}->[0] == 1){
+	            $kfx++;
+	            $fx++;
+
+	            my $abval = abs($mRxns{$k2}->[0]);
+
+	        }
+			elsif (exists $mRxns{$k2} && abs($mRxns{$k2}->[0]) >= $flux_threshold && exists $rGenesPlus{$k2} && $rGenesPlus{$k2}->[0] == 0){
+		            $kfx1++;
+		            $fx++;
+
+		        }
+			elsif (exists $mRxns{$k2} && abs($mRxns{$k2}->[0]) < $flux_threshold && exists $rGenesMinus{$k2} && $rGenesMinus{$k2}->[0] == 1){
+		            $kfx2++;
+		         }
+
+			elsif (exists $mRxns{$k2} && abs($mRxns{$k2}->[0]) < $flux_threshold && exists $rGenesMinus{$k2} && $rGenesMinus{$k2}->[0] == 0){
+		            $kfx3++;
+
+		        }
+			elsif (exists $mRxns{$k2} && abs($mRxns{$k2}->[0]) >= $flux_threshold &&  exists $gGenesPlus{$k2}){
+		            $kfx4++;
+		            $fx++;
+		        }
+			elsif (exists $mRxns{$k2} && abs($mRxns{$k2}->[0]) < $flux_threshold &&  exists $gGenesMinus{$k2}){
+		            $kfx5++;
+		            $er->{gapfill} =1;
+		        }
+		    else{
+		            $kfx6++;
+		    }
+
+		    if (exists $mRxns{$k2}){
+
+		            $kc++;
+		            $kce++;
+		            $er = {
+	    		id => $k2,
+	    		name => $reaction_name{$k2},
+	    		flux => $mRxns{$k2}->[0],
+	    		gapfill => 0,
+	    		expression => $ExpG{$k2}->[1],
+	    		pegs => $mGenes{$k2}
+	    		};
+	    		push (@{$output->{reaction_list}}, $er);
+		    	$er ={};
+
+		            print "$kc\t$k\t$k2\t$mRxns{$k2}->[0]\t$mRxns{$k2}->[1]\t$mRxns{$k2}->[2]\t$mRxns{$k2}->[3]\t$KM{$k}\n";
+		            	$count++;
+		       	}
+			else{
+
+		            $kce++;
+
+		            #print "$k\t$k2\t-\t$kc\n";
+		        }
+
+		}
+
+	            #print "$k\t$kc\t$kce\t$KM{$k}\t***\n";
+
+	            if ($kc> 3){
+
+	            #map Name,totalrxns in model, total KEGG rxns, $tot Rxn with Flux,rxns with genes w/Flux Exp, rxns with genes w/Flux notExp,
+	            #rxns with genes No Flux Exp,rxns with genes NoFlux NoExp, GapFilled with Flux, Gapfilled w/o Flux, did not fill into any category
+
+	            #print "$k\t$kc\t$kce\t$fx\t$kfx\t$kfx1\t$kfx2\t$kfx3\t$kfx4\t$kfx5\t$KM{$k}\t$kfx6\n";
+	               	$output->{totalModelReactions} =$kc;
+	               	$output->{totalKEGGRxns}=$kce;
+	               	$output->{totalRxnFlux} =$fx;
+	               	$output->{gsrFluxPExpP}=$kfx;
+	               	$output->{gsrFluxPExpN}=$kfx1;
+	               	$output->{gsrFluxMExpP}=$kfx2;
+	               	$output->{gsrFluxMExpM}=$kfx3;
+	               	$output->{gpRxnsFluxP}=$kfx4;
+	               	$output->{pathwayName}=$KM{$k};
+	               	push (@{$expAnalysis->{pathways}}, $output);
+
+
+		        }
+
+	            $kc =0;
+	            $kce=0;
+		    	$kfx=0;
+	            $kfx1=0;
+	            $kfx2=0;
+	            $kfx3=0;
+		    	$kfx4=0;
+	            $kfx5=0;
+	            $kfx6=0;
+	            $fx=0;
+
+	}
+
+
+	sub evalExp{
+
+		my $e=0;
+		my @list = @{$_[0]};
+
+		foreach my $r (@list){
+
+			if (exists $ExpG{$r}){
+		    	$e=1;
+
+		 	}
+		 	else{
+		    	$e=0;
+		 	}
+
+		}
+
+	return $e;
+	}
+
+	$return = { 'expAnalysis' => $expAnalysis};
+
+	#END exp_analysis
+    my @_bad_returns;
+    (ref($return) eq 'HASH') or push(@_bad_returns, "Invalid type for return variable \"return\" (value was \"$return\")");
+    if (@_bad_returns) {
+	my $msg = "Invalid returns passed to exp_analysis:\n" . join("", map { "\t$_\n" } @_bad_returns);
+	Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
+							       method_name => 'exp_analysis');
+    }
+    return($return);
+}
+
+
+
+
+=head2 version
+
+  $return = $obj->version()
+
+=over 4
+
+=item Parameter and return types
+
+=begin html
+
+<pre>
+$return is a string
+</pre>
+
+=end html
+
+=begin text
+
+$return is a string
+
+=end text
+
+=item Description
+
+Return the module version. This is a Semantic Versioning number.
+
+=back
+
+=cut
+
+sub version {
+    return $VERSION;
+}
+
+=head1 TYPES
+
+
+
+=head2 fbamodel_id
+
+=over 4
+
+
+
+=item Description
+
+A string representing a fbamodel id.
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a string
+</pre>
+
+=end html
+
+=begin text
+
+a string
+
+=end text
+
+=back
+
+
+
+=head2 fba_ref
+
+=over 4
+
+
+
+=item Description
+
+/*
+        A string representing a fba object.
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a string
+</pre>
+
+=end html
+
+=begin text
+
+a string
+
+=end text
+
+=back
+
+
+
+=head2 expression_series_ref
+
+=over 4
+
+
+
+=item Description
+
+/*
+        A string representing a expression matrix.
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a string
+</pre>
+
+=end html
+
+=begin text
+
+a string
+
+=end text
+
+=back
+
+
+
+=head2 workspace_name
+
+=over 4
+
+
+
+=item Description
+
+A string representing a workspace name.
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a string
+</pre>
+
+=end html
+
+=begin text
+
+a string
+
+=end text
+
+=back
+
+
+
+=head2 EachReaction
+
+=over 4
+
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+id has a value which is a string
+name has a value which is a string
+flux has a value which is a float
+gapfill has a value which is an int
+expression has a value which is a float
+pegs has a value which is a reference to a list where each element is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+id has a value which is a string
+name has a value which is a string
+flux has a value which is a float
+gapfill has a value which is an int
+expression has a value which is a float
+pegs has a value which is a reference to a list where each element is a string
+
+
+=end text
+
+=back
+
+
+
+=head2 EachPathway
+
+=over 4
+
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+pathwayName has a value which is a string
+totalModelReactions has a value which is an int
+totalKEGGRxns has a value which is an int
+totalRxnFlux has a value which is an int
+gsrFluxPExpP has a value which is an int
+gsrFluxPExpN has a value which is an int
+gsrFluxMExpP has a value which is an int
+gsrFluxMExpM has a value which is an int
+gpRxnsFluxP has a value which is an int
+reaction_list has a value which is a reference to a list where each element is a model_analysis_expession.EachReaction
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+pathwayName has a value which is a string
+totalModelReactions has a value which is an int
+totalKEGGRxns has a value which is an int
+totalRxnFlux has a value which is an int
+gsrFluxPExpP has a value which is an int
+gsrFluxPExpN has a value which is an int
+gsrFluxMExpP has a value which is an int
+gsrFluxMExpM has a value which is an int
+gpRxnsFluxP has a value which is an int
+reaction_list has a value which is a reference to a list where each element is a model_analysis_expession.EachReaction
+
+
+=end text
+
+=back
+
+
+
+=head2 PathwayData
+
+=over 4
+
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+pathways has a value which is a reference to a list where each element is a model_analysis_expession.EachPathway
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+pathways has a value which is a reference to a list where each element is a model_analysis_expession.EachPathway
+
+
+=end text
+
+=back
+
+
+
+=cut
+
+1;

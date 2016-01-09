@@ -1,0 +1,65 @@
+#
+# define display information
+#
+name: Evaluate Flux Balace Analysis against gene Expression
+tooltip: |
+	Evaluate the reconciliation of expression data on flux balance analysis.
+screenshots: []
+
+icon: icon.png
+
+#
+# define a set of similar methods that might be useful to the user
+#
+suggestions:
+	apps:
+		related:
+			[]
+		next:
+			[]
+	methods:
+		related:
+			[]
+		next:
+			[]
+
+#
+# Configure the display and description of parameters
+#
+
+parameters :
+    fbamodel_id :
+        ui-name : |
+            FBA Model
+        short-hint : |
+            Name of the FBA Model
+        long-hint  : |
+            The FBA model that is related to the selected FBA and assoicated Expression data.
+
+
+    fba_ref :
+        ui-name : |
+            FBA assoicated with selected Model
+        short-hint : |
+            Name of the Flux Balance Analysis
+        long-hint  : |
+            The FBA object that is related to the selected Model and assoicated Expression data.
+
+    expression_matrix :
+        ui-name : |
+            Expression Data Set
+        short-hint : |
+            Name of the Expression Data Set
+        long-hint  : |
+            The Expression Matrix is related to the selected Model and assoicated FBA. The data is from expression matrix will be normalized and rank to a scale of 0 to 1.
+
+    expression_threshold :
+        ui-name : |
+            Expression threshold
+        short-hint : |
+            Expression threshold value. 0.4 is used by default if left blank
+        long-hint  : |
+            All genes above the mentioned threshold be considered as expessed. 0.4 is ued by default.
+
+description : |
+	<p>This method takes a FBA model, a FBA and a related expression data set inorder to evaluate how well the expression data fit with the FBA.</p>

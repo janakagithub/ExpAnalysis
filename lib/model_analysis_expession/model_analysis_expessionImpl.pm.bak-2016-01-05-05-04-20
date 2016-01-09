@@ -1,0 +1,469 @@
+package model_analysis_expession::model_analysis_expessionImpl;
+use strict;
+use Bio::KBase::Exceptions;
+# Use Semantic Versioning (2.0.0-rc.1)
+# http://semver.org 
+our $VERSION = "0.1.0";
+
+=head1 NAME
+
+model_analysis_expession
+
+=head1 DESCRIPTION
+
+A KBase module: model_analysis_expession
+This module evaluate the reconciliation of expression data against FBA
+
+=cut
+
+#BEGIN_HEADER
+use Bio::KBase::AuthToken;
+use Bio::KBase::workspace::Client;
+use Config::IniFiles;
+use Data::Dumper;
+#END_HEADER
+
+sub new
+{
+    my($class, @args) = @_;
+    my $self = {
+    };
+    bless $self, $class;
+    #BEGIN_CONSTRUCTOR
+    
+    my $config_file = $ENV{ KB_DEPLOYMENT_CONFIG };
+    my $cfg = Config::IniFiles->new(-file=>$config_file);
+    my $wsInstance = $cfg->val('model_analysis_expession','workspace-url');
+    die "no workspace-url defined" unless $wsInstance;
+    
+    $self->{'workspace-url'} = $wsInstance;
+    
+    #END_CONSTRUCTOR
+
+    if ($self->can('_init_instance'))
+    {
+	$self->_init_instance();
+    }
+    return $self;
+}
+
+=head1 METHODS
+
+
+
+=head2 count_contigs
+
+  $return = $obj->count_contigs($workspace_name, $fbamodel_id, $fba_ref, $expression_series_ref)
+
+=over 4
+
+=item Parameter and return types
+
+=begin html
+
+<pre>
+$workspace_name is a model_analysis_expession.workspace_name
+$fbamodel_id is a model_analysis_expession.fbamodel_id
+$fba_ref is a model_analysis_expession.fba_ref
+$expression_series_ref is a model_analysis_expession.expression_series_ref
+$return is a model_analysis_expession.PathwayData
+workspace_name is a string
+fbamodel_id is a string
+fba_ref is a string
+expression_series_ref is a string
+PathwayData is a reference to a hash where the following keys are defined:
+	pathways has a value which is a reference to a list where each element is a model_analysis_expession.EachPathway
+EachPathway is a reference to a hash where the following keys are defined:
+	pathwayName has a value which is a string
+	totalModelReactions has a value which is an int
+	totalKEGGRxns has a value which is an int
+	totalRxnFlux has a value which is an int
+	gsrFluxPExpP has a value which is an int
+	gsrFluxPExpN has a value which is an int
+	gsrFluxMExpP has a value which is an int
+	gsrFluxMExpM has a value which is an int
+	gpRxnsFluxP has a value which is an int
+	reaction_list has a value which is a reference to a list where each element is a model_analysis_expession.EachReaction
+EachReaction is a reference to a hash where the following keys are defined:
+	id has a value which is a string
+	name has a value which is a string
+	flux has a value which is a float
+	gapfill has a value which is an int
+	expression has a value which is a float
+	pegs has a value which is a reference to a list where each element is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+$workspace_name is a model_analysis_expession.workspace_name
+$fbamodel_id is a model_analysis_expession.fbamodel_id
+$fba_ref is a model_analysis_expession.fba_ref
+$expression_series_ref is a model_analysis_expession.expression_series_ref
+$return is a model_analysis_expession.PathwayData
+workspace_name is a string
+fbamodel_id is a string
+fba_ref is a string
+expression_series_ref is a string
+PathwayData is a reference to a hash where the following keys are defined:
+	pathways has a value which is a reference to a list where each element is a model_analysis_expession.EachPathway
+EachPathway is a reference to a hash where the following keys are defined:
+	pathwayName has a value which is a string
+	totalModelReactions has a value which is an int
+	totalKEGGRxns has a value which is an int
+	totalRxnFlux has a value which is an int
+	gsrFluxPExpP has a value which is an int
+	gsrFluxPExpN has a value which is an int
+	gsrFluxMExpP has a value which is an int
+	gsrFluxMExpM has a value which is an int
+	gpRxnsFluxP has a value which is an int
+	reaction_list has a value which is a reference to a list where each element is a model_analysis_expession.EachReaction
+EachReaction is a reference to a hash where the following keys are defined:
+	id has a value which is a string
+	name has a value which is a string
+	flux has a value which is a float
+	gapfill has a value which is an int
+	expression has a value which is a float
+	pegs has a value which is a reference to a list where each element is a string
+
+
+=end text
+
+
+
+=item Description
+
+
+
+=back
+
+=cut
+
+sub count_contigs
+{
+    my $self = shift;
+    my($workspace_name, $fbamodel_id, $fba_ref, $expression_series_ref) = @_;
+
+    my @_bad_arguments;
+    (!ref($workspace_name)) or push(@_bad_arguments, "Invalid type for argument \"workspace_name\" (value was \"$workspace_name\")");
+    (!ref($fbamodel_id)) or push(@_bad_arguments, "Invalid type for argument \"fbamodel_id\" (value was \"$fbamodel_id\")");
+    (!ref($fba_ref)) or push(@_bad_arguments, "Invalid type for argument \"fba_ref\" (value was \"$fba_ref\")");
+    (!ref($expression_series_ref)) or push(@_bad_arguments, "Invalid type for argument \"expression_series_ref\" (value was \"$expression_series_ref\")");
+    if (@_bad_arguments) {
+	my $msg = "Invalid arguments passed to count_contigs:\n" . join("", map { "\t$_\n" } @_bad_arguments);
+	Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
+							       method_name => 'count_contigs');
+    }
+
+    my $ctx = $model_analysis_expession::model_analysis_expessionServer::CallContext;
+    my($return);
+    #BEGIN count_contigs
+    
+    my $token=$ctx->token;
+    my $wshandle=Bio::KBase::workspace::Client->new($self->{'workspace-url'},token=>$token);
+    my $wsobj=$wshandle->get_objects([{workspace=>$workspace_name,name=>$contigset_id}]);
+    my $contigcount=scalar (@{$wsobj->[0]{data}{contigs}});
+
+    $return = { 'contig_count' => $contigcount };
+    
+    #END count_contigs
+    my @_bad_returns;
+    (ref($return) eq 'HASH') or push(@_bad_returns, "Invalid type for return variable \"return\" (value was \"$return\")");
+    if (@_bad_returns) {
+	my $msg = "Invalid returns passed to count_contigs:\n" . join("", map { "\t$_\n" } @_bad_returns);
+	Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
+							       method_name => 'count_contigs');
+    }
+    return($return);
+}
+
+
+
+
+=head2 version 
+
+  $return = $obj->version()
+
+=over 4
+
+=item Parameter and return types
+
+=begin html
+
+<pre>
+$return is a string
+</pre>
+
+=end html
+
+=begin text
+
+$return is a string
+
+=end text
+
+=item Description
+
+Return the module version. This is a Semantic Versioning number.
+
+=back
+
+=cut
+
+sub version {
+    return $VERSION;
+}
+
+=head1 TYPES
+
+
+
+=head2 fbamodel_id
+
+=over 4
+
+
+
+=item Description
+
+A string representing a fbamodel id.
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a string
+</pre>
+
+=end html
+
+=begin text
+
+a string
+
+=end text
+
+=back
+
+
+
+=head2 fba_ref
+
+=over 4
+
+
+
+=item Description
+
+/*
+        A string representing a fba object.
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a string
+</pre>
+
+=end html
+
+=begin text
+
+a string
+
+=end text
+
+=back
+
+
+
+=head2 expression_series_ref
+
+=over 4
+
+
+
+=item Description
+
+/*
+        A string representing a expression matrix.
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a string
+</pre>
+
+=end html
+
+=begin text
+
+a string
+
+=end text
+
+=back
+
+
+
+=head2 workspace_name
+
+=over 4
+
+
+
+=item Description
+
+A string representing a workspace name.
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a string
+</pre>
+
+=end html
+
+=begin text
+
+a string
+
+=end text
+
+=back
+
+
+
+=head2 EachReaction
+
+=over 4
+
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+id has a value which is a string
+name has a value which is a string
+flux has a value which is a float
+gapfill has a value which is an int
+expression has a value which is a float
+pegs has a value which is a reference to a list where each element is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+id has a value which is a string
+name has a value which is a string
+flux has a value which is a float
+gapfill has a value which is an int
+expression has a value which is a float
+pegs has a value which is a reference to a list where each element is a string
+
+
+=end text
+
+=back
+
+
+
+=head2 EachPathway
+
+=over 4
+
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+pathwayName has a value which is a string
+totalModelReactions has a value which is an int
+totalKEGGRxns has a value which is an int
+totalRxnFlux has a value which is an int
+gsrFluxPExpP has a value which is an int
+gsrFluxPExpN has a value which is an int
+gsrFluxMExpP has a value which is an int
+gsrFluxMExpM has a value which is an int
+gpRxnsFluxP has a value which is an int
+reaction_list has a value which is a reference to a list where each element is a model_analysis_expession.EachReaction
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+pathwayName has a value which is a string
+totalModelReactions has a value which is an int
+totalKEGGRxns has a value which is an int
+totalRxnFlux has a value which is an int
+gsrFluxPExpP has a value which is an int
+gsrFluxPExpN has a value which is an int
+gsrFluxMExpP has a value which is an int
+gsrFluxMExpM has a value which is an int
+gpRxnsFluxP has a value which is an int
+reaction_list has a value which is a reference to a list where each element is a model_analysis_expession.EachReaction
+
+
+=end text
+
+=back
+
+
+
+=head2 PathwayData
+
+=over 4
+
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+pathways has a value which is a reference to a list where each element is a model_analysis_expession.EachPathway
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+pathways has a value which is a reference to a list where each element is a model_analysis_expession.EachPathway
+
+
+=end text
+
+=back
+
+
+
+=cut
+
+1;

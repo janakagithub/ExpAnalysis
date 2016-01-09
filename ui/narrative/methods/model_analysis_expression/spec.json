@@ -1,0 +1,105 @@
+{
+	"ver": "0.0.1",
+
+	"authors": [
+		"janakakbase"
+	],
+	"contact": "janakaed@anl.gov",
+	"visible": true,
+	"categories": ["active"],
+	"widgets": {
+		"input": null,
+		"output": null
+	},
+	"parameters": [
+		{
+
+			"id": "fbamodel_id",
+			"optional": false,
+			"advanced": false,
+			"allow_multiple": false,
+			"default_values": [ "" ],
+			"field_type": "text",
+			"text_options": {
+			"valid_ws_types": ["KBaseFBA.FBAModel"]
+			}
+		},
+		{
+		    "id" : "fba_ref",
+		    "optional" : false,
+		    "advanced" : false,
+		    "allow_multiple" : false,
+		    "default_values" : [ "" ],
+		    "field_type" : "text",
+		    "text_options" : {
+		    "valid_ws_types" : [ "KBaseFBA.FBA" ]
+		    }
+         },
+         {
+		    "id" : "expression_matrix",
+		    "optional" : false,
+		    "advanced" : false,
+		    "allow_multiple" : false,
+		    "default_values" : [ "" ],
+		    "field_type" : "text",
+		    "text_options" : {
+		    "valid_ws_types" : [ "KBaseFeatureValues.ExpressionMatrix" ]
+		    }
+         },
+         {
+	        "id" : "expression_threshold",
+		    "optional" : true,
+		    "advanced" : false,
+		    "allow_multiple" : false,
+		    "default_values" : [ "0.4" ],
+		    "field_type" : "text",
+		    "text_options" : {
+		    "validate_as": "float"
+	        }
+         }
+
+	],
+	"behavior": {
+		"service-mapping": {
+			"url": "",
+			"name": "model_analysis_expession",
+			"method": "exp_analysis",
+			"input_mapping": [
+				{
+					"narrative_system_variable": "workspace",
+					"target_argument_position": 0
+				},
+				{
+					"input_parameter": "fbamodel_id",
+					"target_property":  "fbamodel_id"
+				},
+				{
+					"input_parameter": "fba_ref",
+					"target_property": "fba_ref"
+				},
+				{
+					"input_parameter": "expression_matrix",
+					"target_property": "expression_series_ref"
+				},
+				{
+					"input_parameter": "expression_threshold",
+					"target_property": "expression_cutoff"
+				}
+
+
+			],
+			"output_mapping": [
+				{
+					"service_method_output_path": [0, "expAnalysis"],
+					"target_property": "exp_analysis"
+				},
+
+				{
+					"narrative_system_variable": "workspace",
+					"target_property": "workspaceName"
+				}
+			]
+		}
+	},
+	"job_id_output_field": "docker"
+}
