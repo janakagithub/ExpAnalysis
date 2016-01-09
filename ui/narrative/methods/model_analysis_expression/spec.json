@@ -63,7 +63,7 @@
 		"service-mapping": {
 			"url": "",
 			"name": "model_analysis_expession",
-			"method": "exp_analysis",
+			"method": "model_analysis_expression",
 			"input_mapping": [
 				{
 					"narrative_system_variable": "workspace",
