@@ -45,7 +45,7 @@ parameters :
         long-hint  : |
             The FBA object that is related to the selected Model and assoicated Expression data.
 
-    expression_matrix :
+    expression_series_ref :
         ui-name : |
             Expression Data Set
         short-hint : |
@@ -53,7 +53,7 @@ parameters :
         long-hint  : |
             The Expression Matrix is related to the selected Model and assoicated FBA. The data is from expression matrix will be normalized and rank to a scale of 0 to 1.
 
-    expression_threshold :
+    expression_cutoff :
         ui-name : |
             Expression threshold
         short-hint : |
