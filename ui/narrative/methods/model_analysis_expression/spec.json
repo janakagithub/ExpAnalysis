@@ -78,11 +78,11 @@
 					"target_property": "fba_ref"
 				},
 				{
-					"input_parameter": "expression_matrix",
+					"input_parameter": "expression_series_ref",
 					"target_property": "expression_series_ref"
 				},
 				{
-					"input_parameter": "expression_threshold",
+					"input_parameter": "expression_cutoff",
 					"target_property": "expression_cutoff"
 				}
 
