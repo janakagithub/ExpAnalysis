@@ -2,7 +2,7 @@ package model_analysis_expession::model_analysis_expessionImpl;
 use strict;
 use Bio::KBase::Exceptions;
 # Use Semantic Versioning (2.0.0-rc.1)
-# http://semver.org 
+# http://semver.org
 our $VERSION = "0.1.0";
 
 =head1 NAME
@@ -512,6 +512,7 @@ sub exp_analysis
 	return $e;
 	}
 
+	print "$expAnalysis";
 	$return = { 'expAnalysis' => $expAnalysis};
 
     #END exp_analysis
@@ -528,7 +529,7 @@ sub exp_analysis
 
 
 
-=head2 version 
+=head2 version
 
   $return = $obj->version()
 
