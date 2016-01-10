@@ -36,7 +36,7 @@
 		    }
          },
          {
-		    "id" : "expression_matrix",
+		    "id" : "expression_series_ref",
 		    "optional" : false,
 		    "advanced" : false,
 		    "allow_multiple" : false,
@@ -47,7 +47,7 @@
 		    }
          },
          {
-	        "id" : "expression_threshold",
+	        "id" : "expression_cutoff",
 		    "optional" : true,
 		    "advanced" : false,
 		    "allow_multiple" : false,
@@ -67,7 +67,7 @@
 			"input_mapping": [
 				{
 					"narrative_system_variable": "workspace",
-					"target_argument_position": 0
+					"target_property": "workspace"
 				},
 				{
 					"input_parameter": "fbamodel_id",
@@ -96,7 +96,7 @@
 
 				{
 					"narrative_system_variable": "workspace",
-					"target_property": "workspaceName"
+					"target_property": "workspace_name"
 				}
 			]
 		}
