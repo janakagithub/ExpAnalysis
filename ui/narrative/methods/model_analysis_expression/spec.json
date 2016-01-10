@@ -66,7 +66,7 @@
 			"method": "exp_analysis",
 			"input_mapping": [
 				{
-					"narrative_system_variable": "workspace",
+					"narrative_system_variable": "workspace_name",
 					"target_property": "workspace_name"
 				},
 				{
@@ -95,7 +95,7 @@
 				},
 
 				{
-					"narrative_system_variable": "workspace",
+					"narrative_system_variable": "workspace_name",
 					"target_property": "workspace_name"
 				}
 			]
