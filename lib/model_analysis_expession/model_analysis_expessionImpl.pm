@@ -468,7 +468,7 @@ sub exp_analysis
 	            #map Name,totalrxns in model, total KEGG rxns, $tot Rxn with Flux,rxns with genes w/Flux Exp, rxns with genes w/Flux notExp,
 	            #rxns with genes No Flux Exp,rxns with genes NoFlux NoExp, GapFilled with Flux, Gapfilled w/o Flux, did not fill into any category
 
-	            #print "$k\t$kc\t$kce\t$fx\t$kfx\t$kfx1\t$kfx2\t$kfx3\t$kfx4\t$kfx5\t$KM{$k}\t$kfx6\n";
+	            print "$k\t$kc\t$kce\t$fx\t$kfx\t$kfx1\t$kfx2\t$kfx3\t$kfx4\t$kfx5\t$KM{$k}\t$kfx6\n";
 	               	$output->{totalModelReactions} =$kc;
 	               	$output->{totalKEGGRxns}=$kce;
 	               	$output->{totalRxnFlux} =$fx;
