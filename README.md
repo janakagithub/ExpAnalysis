@@ -3,4 +3,4 @@
 # model_analysis_expession
 ---
 
-This is the basic readme for this module. This module contains an example method that counts the contigs in a contig set.
+This is the basic readme for this module. This module takes a FBA model, FBA and a expresession matrix object and evaluate how well the expression data reconcile with the flux distribution.
