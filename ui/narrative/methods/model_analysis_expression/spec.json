@@ -51,7 +51,7 @@
 		    "optional" : true,
 		    "advanced" : false,
 		    "allow_multiple" : false,
-		    "default_values" : [ 0.4 ],
+		    "default_values" : [0.4],
 		    "field_type" : "text",
 		    "text_options" : {
 		    "validate_as": "float"
@@ -67,23 +67,23 @@
 			"input_mapping": [
 				{
 					"narrative_system_variable": "workspace",
-					"target_property": "workspace_name"
+					"target_argument_position": "0"
 				},
 				{
 					"input_parameter": "fbamodel_id",
-					"target_property":  "fbamodel_id"
+					"target_argument_position":  "1"
 				},
 				{
 					"input_parameter": "fba_ref",
-					"target_property": "fba_ref"
+					"target_argument_position": "2"
 				},
 				{
 					"input_parameter": "expression_series_ref",
-					"target_property": "expression_series_ref"
+					"target_argument_position": "3"
 				},
 				{
 					"input_parameter": "expression_cutoff",
-					"target_property": "expression_cutoff"
+					"target_argument_position": "4"
 				}
 
 
