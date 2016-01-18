@@ -53,7 +53,7 @@ sub new
 
 =head2 exp_analysis
 
-  $return = $obj->exp_analysis($workspace_name, $fbamodel_id, $fba_ref, $expression_series_ref, $expression_cutoff)
+  $return = $obj->exp_analysis($workspace_name, $fbamodel_id, $fba_id, $expression_series_ref, $expression_cutoff)
 
 =over 4
 
@@ -64,19 +64,26 @@ sub new
 <pre>
 $workspace_name is a model_analysis_expession.workspace_name
 $fbamodel_id is a model_analysis_expession.fbamodel_id
-$fba_ref is a model_analysis_expession.fba_ref
+$fba_id is a model_analysis_expession.fba_id
 $expression_series_ref is a model_analysis_expession.expression_series_ref
 $expression_cutoff is a model_analysis_expession.expression_cutoff
-$return is a model_analysis_expession.PathwayData
+$return is a model_analysis_expession.FBAPathwayAnalysis
 workspace_name is a string
 fbamodel_id is a string
-fba_ref is a string
+fba_id is a string
 expression_series_ref is a string
 expression_cutoff is a float
-PathwayData is a reference to a hash where the following keys are defined:
+FBAPathwayAnalysis is a reference to a hash where the following keys are defined:
 	pathwayType has a value which is a string
-	pathways has a value which is a reference to a list where each element is a model_analysis_expession.EachPathway
-EachPathway is a reference to a hash where the following keys are defined:
+	expression_matrix_ref has a value which is a model_analysis_expession.expression_matrix_ref
+	expression_condition has a value which is a string
+	fbamodel_ref has a value which is a model_analysis_expession.fbamodel_ref
+	fba_ref has a value which is a model_analysis_expession.fba_ref
+	pathways has a value which is a reference to a list where each element is a model_analysis_expession.FBAPathwayAnalysisPathway
+expression_matrix_ref is a string
+fbamodel_ref is a string
+fba_ref is a string
+FBAPathwayAnalysisPathway is a reference to a hash where the following keys are defined:
 	pathwayName has a value which is a string
 	pathwayId has a value which is an int
 	totalModelReactions has a value which is an int
@@ -87,15 +94,15 @@ EachPathway is a reference to a hash where the following keys are defined:
 	gsrFluxMExpP has a value which is an int
 	gsrFluxMExpM has a value which is an int
 	gpRxnsFluxP has a value which is an int
-	reaction_list has a value which is a reference to a list where each element is a model_analysis_expession.EachReaction
-EachReaction is a reference to a hash where the following keys are defined:
+	reaction_list has a value which is a reference to a list where each element is a model_analysis_expession.FBAPathwayAnalysisReaction
+FBAPathwayAnalysisReaction is a reference to a hash where the following keys are defined:
 	id has a value which is a string
 	name has a value which is a string
 	flux has a value which is a float
 	gapfill has a value which is an int
 	expressed has a value which is an int
-	pegs has a value which is a reference to a list where each element is a model_analysis_expession.EachPeg
-EachPeg is a reference to a hash where the following keys are defined:
+	pegs has a value which is a reference to a list where each element is a model_analysis_expession.FBAPathwayAnalysisFeature
+FBAPathwayAnalysisFeature is a reference to a hash where the following keys are defined:
 	pegId has a value which is a string
 	expression has a value which is a float
 
@@ -107,19 +114,26 @@ EachPeg is a reference to a hash where the following keys are defined:
 
 $workspace_name is a model_analysis_expession.workspace_name
 $fbamodel_id is a model_analysis_expession.fbamodel_id
-$fba_ref is a model_analysis_expession.fba_ref
+$fba_id is a model_analysis_expession.fba_id
 $expression_series_ref is a model_analysis_expession.expression_series_ref
 $expression_cutoff is a model_analysis_expession.expression_cutoff
-$return is a model_analysis_expession.PathwayData
+$return is a model_analysis_expession.FBAPathwayAnalysis
 workspace_name is a string
 fbamodel_id is a string
-fba_ref is a string
+fba_id is a string
 expression_series_ref is a string
 expression_cutoff is a float
-PathwayData is a reference to a hash where the following keys are defined:
+FBAPathwayAnalysis is a reference to a hash where the following keys are defined:
 	pathwayType has a value which is a string
-	pathways has a value which is a reference to a list where each element is a model_analysis_expession.EachPathway
-EachPathway is a reference to a hash where the following keys are defined:
+	expression_matrix_ref has a value which is a model_analysis_expession.expression_matrix_ref
+	expression_condition has a value which is a string
+	fbamodel_ref has a value which is a model_analysis_expession.fbamodel_ref
+	fba_ref has a value which is a model_analysis_expession.fba_ref
+	pathways has a value which is a reference to a list where each element is a model_analysis_expession.FBAPathwayAnalysisPathway
+expression_matrix_ref is a string
+fbamodel_ref is a string
+fba_ref is a string
+FBAPathwayAnalysisPathway is a reference to a hash where the following keys are defined:
 	pathwayName has a value which is a string
 	pathwayId has a value which is an int
 	totalModelReactions has a value which is an int
@@ -130,15 +144,15 @@ EachPathway is a reference to a hash where the following keys are defined:
 	gsrFluxMExpP has a value which is an int
 	gsrFluxMExpM has a value which is an int
 	gpRxnsFluxP has a value which is an int
-	reaction_list has a value which is a reference to a list where each element is a model_analysis_expession.EachReaction
-EachReaction is a reference to a hash where the following keys are defined:
+	reaction_list has a value which is a reference to a list where each element is a model_analysis_expession.FBAPathwayAnalysisReaction
+FBAPathwayAnalysisReaction is a reference to a hash where the following keys are defined:
 	id has a value which is a string
 	name has a value which is a string
 	flux has a value which is a float
 	gapfill has a value which is an int
 	expressed has a value which is an int
-	pegs has a value which is a reference to a list where each element is a model_analysis_expession.EachPeg
-EachPeg is a reference to a hash where the following keys are defined:
+	pegs has a value which is a reference to a list where each element is a model_analysis_expession.FBAPathwayAnalysisFeature
+FBAPathwayAnalysisFeature is a reference to a hash where the following keys are defined:
 	pegId has a value which is a string
 	expression has a value which is a float
 
@@ -158,12 +172,12 @@ EachPeg is a reference to a hash where the following keys are defined:
 sub exp_analysis
 {
     my $self = shift;
-    my($workspace_name, $fbamodel_id, $fba_ref, $expression_series_ref, $expression_cutoff) = @_;
+    my($workspace_name, $fbamodel_id, $fba_id, $expression_series_ref, $expression_cutoff) = @_;
 
     my @_bad_arguments;
     (!ref($workspace_name)) or push(@_bad_arguments, "Invalid type for argument \"workspace_name\" (value was \"$workspace_name\")");
     (!ref($fbamodel_id)) or push(@_bad_arguments, "Invalid type for argument \"fbamodel_id\" (value was \"$fbamodel_id\")");
-    (!ref($fba_ref)) or push(@_bad_arguments, "Invalid type for argument \"fba_ref\" (value was \"$fba_ref\")");
+    (!ref($fba_id)) or push(@_bad_arguments, "Invalid type for argument \"fba_id\" (value was \"$fba_id\")");
     (!ref($expression_series_ref)) or push(@_bad_arguments, "Invalid type for argument \"expression_series_ref\" (value was \"$expression_series_ref\")");
     (!ref($expression_cutoff)) or push(@_bad_arguments, "Invalid type for argument \"expression_cutoff\" (value was \"$expression_cutoff\")");
     if (@_bad_arguments) {
@@ -179,14 +193,19 @@ sub exp_analysis
     my $token=$ctx->token;
     my $wshandle=Bio::KBase::workspace::Client->new($self->{'workspace-url'},token=>$token);
     my $fm=$wshandle->get_objects([{workspace=>$workspace_name,name=>$fbamodel_id}]);
-    my $fb=$wshandle->get_objects([{workspace=>$workspace_name,name=>$fba_ref}]);
+    my $fb=$wshandle->get_objects([{workspace=>$workspace_name,name=>$fba_id}]);
     my $em=$wshandle->get_objects([{workspace=>$workspace_name,name=>$expression_series_ref}]);
     my $bc=$wshandle->get_objects([{workspace=>'kbase',name=>'plantdefault_obs'}]);
 
 	my $expAnalysis = {
 		pathwayType => "KEGG",
+		expression_matrix_ref => $em->[0]->{info}->[6]."/".$em->[0]->{info}->[0]."/".$em->[0]->{info}->[4],
+		expression_condition => "",
+		fbamodel_ref => $fm->[0]->{info}->[6]."/".$fm->[0]->{info}->[0]."/".$fm->[0]->{info}->[4],
+		fba_ref => $fb->[0]->{info}->[6]."/".$fb->[0]->{info}->[0]."/".$fb->[0]->{info}->[4],
     	pathways => []
     };
+
     my %ExpG;
     my $exp_constant =0.4;
     my $expS = $em->[0]->{data}->{data};
@@ -357,6 +376,7 @@ sub exp_analysis
 
 	my $output = {
     	pathwayName => "",
+    	pathwayId => 0,
     	totalModelReactions => 0,
     	totalKEGGRxns => 0,
 	    totalRxnFlux => 0,
@@ -400,6 +420,7 @@ sub exp_analysis
 	    foreach my $k2 (keys(%{$KGtorxn{$k}}))
 	    {
 	    	$er->{gapfill} =0;
+	    	$er->{flux} =0;
 	    	$er->{pegs} = [];
 	    	$er->{expressed} =0;
 
@@ -441,6 +462,7 @@ sub exp_analysis
 		            $kce++;
 		            $er->{id} =$k2;
 		            $er->{name} = $reaction_name{$k2};
+		            $er->{flux} = $mRxns{$k2}->[0];
 
 		            if (defined $mGenes{$k2}){
 
@@ -468,7 +490,7 @@ sub exp_analysis
 	            #map Name,totalrxns in model, total KEGG rxns, $tot Rxn with Flux,rxns with genes w/Flux Exp, rxns with genes w/Flux notExp,
 	            #rxns with genes No Flux Exp,rxns with genes NoFlux NoExp, GapFilled with Flux, Gapfilled w/o Flux, did not fill into any category
 
-	            print "$k\t$kc\t$kce\t$fx\t$kfx\t$kfx1\t$kfx2\t$kfx3\t$kfx4\t$kfx5\t$KM{$k}\t$kfx6\n";
+	            #print "$k\t$kc\t$kce\t$fx\t$kfx\t$kfx1\t$kfx2\t$kfx3\t$kfx4\t$kfx5\t$KM{$k}\t$kfx6\n";
 	               	$output->{totalModelReactions} =$kc;
 	               	$output->{totalKEGGRxns}=$kce;
 	               	$output->{totalRxnFlux} =$fx;
@@ -478,7 +500,7 @@ sub exp_analysis
 	               	$output->{gsrFluxMExpM}=$kfx3;
 	               	$output->{gpRxnsFluxP}=$kfx4;
 	               	$output->{pathwayName}=$KM{$k};
-	               	$output->{pathwayId}=$k;
+	               	$output->{pathwayId}=0000;
 	               	push (@{$expAnalysis->{pathways}}, $output);
 
 
@@ -512,8 +534,17 @@ sub exp_analysis
 	return $e;
 	}
 
-	#print "$expAnalysis";
-	$return = { 'expAnalysis' => $expAnalysis};
+	my $saveObjectParams;
+	$saveObjectParams->{workspace}=$workspace_name;
+    $saveObjectParams->{objects}->[0]->{type} = "KBaseFBA.FBAPathwayAnalysis";
+    $saveObjectParams->{objects}->[0]->{data} = $expAnalysis;
+    $saveObjectParams->{objects}->[0]->{name} = $fba_id.".".$expression_series_ref."Analysis";
+
+
+    my $meta = $wshandle->save_objects($saveObjectParams);
+
+	print &Dumper ($meta);
+	$return = { 'expAnalysis' => $meta};
 
     #END exp_analysis
     my @_bad_returns;
@@ -598,7 +629,7 @@ a string
 
 
 
-=head2 fba_ref
+=head2 fba_id
 
 =over 4
 
@@ -724,7 +755,103 @@ a string
 
 
 
-=head2 EachPeg
+=head2 expression_matrix_ref
+
+=over 4
+
+
+
+=item Description
+
+Reference to expression data
+@id ws KBaseFeatureValues.ExpressionMatrix
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a string
+</pre>
+
+=end html
+
+=begin text
+
+a string
+
+=end text
+
+=back
+
+
+
+=head2 fbamodel_ref
+
+=over 4
+
+
+
+=item Description
+
+Reference to metabolic model
+@id ws KBaseFBA.FBAModel
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a string
+</pre>
+
+=end html
+
+=begin text
+
+a string
+
+=end text
+
+=back
+
+
+
+=head2 fba_ref
+
+=over 4
+
+
+
+=item Description
+
+Reference to a FBA object
+@id ws KBaseFBA.FBA
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a string
+</pre>
+
+=end html
+
+=begin text
+
+a string
+
+=end text
+
+=back
+
+
+
+=head2 FBAPathwayAnalysisFeature
 
 =over 4
 
@@ -756,7 +883,7 @@ expression has a value which is a float
 
 
 
-=head2 EachReaction
+=head2 FBAPathwayAnalysisReaction
 
 =over 4
 
@@ -773,7 +900,7 @@ name has a value which is a string
 flux has a value which is a float
 gapfill has a value which is an int
 expressed has a value which is an int
-pegs has a value which is a reference to a list where each element is a model_analysis_expession.EachPeg
+pegs has a value which is a reference to a list where each element is a model_analysis_expession.FBAPathwayAnalysisFeature
 
 </pre>
 
@@ -787,7 +914,7 @@ name has a value which is a string
 flux has a value which is a float
 gapfill has a value which is an int
 expressed has a value which is an int
-pegs has a value which is a reference to a list where each element is a model_analysis_expession.EachPeg
+pegs has a value which is a reference to a list where each element is a model_analysis_expession.FBAPathwayAnalysisFeature
 
 
 =end text
@@ -796,7 +923,7 @@ pegs has a value which is a reference to a list where each element is a model_an
 
 
 
-=head2 EachPathway
+=head2 FBAPathwayAnalysisPathway
 
 =over 4
 
@@ -818,7 +945,7 @@ gsrFluxPExpN has a value which is an int
 gsrFluxMExpP has a value which is an int
 gsrFluxMExpM has a value which is an int
 gpRxnsFluxP has a value which is an int
-reaction_list has a value which is a reference to a list where each element is a model_analysis_expession.EachReaction
+reaction_list has a value which is a reference to a list where each element is a model_analysis_expession.FBAPathwayAnalysisReaction
 
 </pre>
 
@@ -837,7 +964,7 @@ gsrFluxPExpN has a value which is an int
 gsrFluxMExpP has a value which is an int
 gsrFluxMExpM has a value which is an int
 gpRxnsFluxP has a value which is an int
-reaction_list has a value which is a reference to a list where each element is a model_analysis_expession.EachReaction
+reaction_list has a value which is a reference to a list where each element is a model_analysis_expession.FBAPathwayAnalysisReaction
 
 
 =end text
@@ -846,7 +973,7 @@ reaction_list has a value which is a reference to a list where each element is a
 
 
 
-=head2 PathwayData
+=head2 FBAPathwayAnalysis
 
 =over 4
 
@@ -859,7 +986,11 @@ reaction_list has a value which is a reference to a list where each element is a
 <pre>
 a reference to a hash where the following keys are defined:
 pathwayType has a value which is a string
-pathways has a value which is a reference to a list where each element is a model_analysis_expession.EachPathway
+expression_matrix_ref has a value which is a model_analysis_expession.expression_matrix_ref
+expression_condition has a value which is a string
+fbamodel_ref has a value which is a model_analysis_expession.fbamodel_ref
+fba_ref has a value which is a model_analysis_expession.fba_ref
+pathways has a value which is a reference to a list where each element is a model_analysis_expession.FBAPathwayAnalysisPathway
 
 </pre>
 
@@ -869,7 +1000,11 @@ pathways has a value which is a reference to a list where each element is a mode
 
 a reference to a hash where the following keys are defined:
 pathwayType has a value which is a string
-pathways has a value which is a reference to a list where each element is a model_analysis_expession.EachPathway
+expression_matrix_ref has a value which is a model_analysis_expession.expression_matrix_ref
+expression_condition has a value which is a string
+fbamodel_ref has a value which is a model_analysis_expession.fbamodel_ref
+fba_ref has a value which is a model_analysis_expession.fba_ref
+pathways has a value which is a reference to a list where each element is a model_analysis_expession.FBAPathwayAnalysisPathway
 
 
 =end text

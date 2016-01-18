@@ -51,7 +51,7 @@ my $ecutoff = 0.4;
 
 eval {
 my $ret = $impl->exp_analysis($ws, $fba_model, $fba, $expression_mat, $ecutoff);
- print &Dumper ($ret);
+ #print &Dumper ($ret);
 };
 
 my $err = undef;

@@ -145,22 +145,22 @@ public class ModelAnalysisExpessionClient {
      * </pre>
      * @param   arg1   instance of original type "workspace_name" (A string representing a workspace name.)
      * @param   arg2   instance of original type "fbamodel_id" (A string representing a fbamodel id.)
-     * @param   arg3   instance of original type "fba_ref" (/* A string representing a fba object.)
+     * @param   arg3   instance of original type "fba_id" (/* A string representing a fba object.)
      * @param   arg4   instance of original type "expression_series_ref" (/* A string representing a expression matrix.)
      * @param   arg5   instance of original type "expression_cutoff" (A string representing a expression threshold.)
-     * @return   instance of type {@link us.kbase.modelanalysisexpession.PathwayData PathwayData}
+     * @return   instance of type {@link us.kbase.modelanalysisexpession.FBAPathwayAnalysis FBAPathwayAnalysis}
      * @throws IOException if an IO exception occurs
      * @throws JsonClientException if a JSON RPC exception occurs
      */
-    public PathwayData expAnalysis(String arg1, String arg2, String arg3, String arg4, Double arg5, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
+    public FBAPathwayAnalysis expAnalysis(String arg1, String arg2, String arg3, String arg4, Double arg5, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
         List<Object> args = new ArrayList<Object>();
         args.add(arg1);
         args.add(arg2);
         args.add(arg3);
         args.add(arg4);
         args.add(arg5);
-        TypeReference<List<PathwayData>> retType = new TypeReference<List<PathwayData>>() {};
-        List<PathwayData> res = caller.jsonrpcCall("model_analysis_expession.exp_analysis", args, retType, true, true, jsonRpcContext);
+        TypeReference<List<FBAPathwayAnalysis>> retType = new TypeReference<List<FBAPathwayAnalysis>>() {};
+        List<FBAPathwayAnalysis> res = caller.jsonrpcCall("model_analysis_expession.exp_analysis", args, retType, true, true, jsonRpcContext);
         return res.get(0);
     }
 }
