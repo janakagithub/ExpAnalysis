@@ -144,15 +144,15 @@ public class ModelAnalysisExpessionClient {
      * <pre>
      * </pre>
      * @param   arg1   instance of original type "workspace_name" (A string representing a workspace name.)
-     * @param   arg2   instance of original type "fbamodel_id" (A string representing a fbamodel id.)
-     * @param   arg3   instance of original type "fba_id" (/* A string representing a fba object.)
-     * @param   arg4   instance of original type "expression_series_ref" (/* A string representing a expression matrix.)
+     * @param   arg2   instance of original type "fba_id" (A string representing a fba_id.)
+     * @param   arg3   instance of original type "expression_series_ref" (A string representing a expression matrix.)
+     * @param   arg4   instance of original type "expression_condition" (A string representing a expression condition.)
      * @param   arg5   instance of original type "expression_cutoff" (A string representing a expression threshold.)
      * @return   instance of type {@link us.kbase.modelanalysisexpession.FBAPathwayAnalysis FBAPathwayAnalysis}
      * @throws IOException if an IO exception occurs
      * @throws JsonClientException if a JSON RPC exception occurs
      */
-    public FBAPathwayAnalysis expAnalysis(String arg1, String arg2, String arg3, String arg4, Double arg5, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
+    public FBAPathwayAnalysis expAnalysis(String arg1, String arg2, String arg3, Double arg4, Double arg5, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
         List<Object> args = new ArrayList<Object>();
         args.add(arg1);
         args.add(arg2);

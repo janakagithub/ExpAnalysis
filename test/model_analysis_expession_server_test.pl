@@ -46,11 +46,12 @@ my $fba_model = "test_gapffill";
 my $fba = "FBA_ShewOut";
 my $expression_mat = "BU12_10.rma";
 my $ws = 'janakakbase:1450461455608';
+my $exp_cond = 'BU12_10.CEL.gz';
 my $ecutoff = 0.4;
 
 
 eval {
-my $ret = $impl->exp_analysis($ws, $fba_model, $fba, $expression_mat, $ecutoff);
+my $ret = $impl->exp_analysis($ws, $fba, $expression_mat, $exp_cond, $ecutoff);
  #print &Dumper ($ret);
 };
 

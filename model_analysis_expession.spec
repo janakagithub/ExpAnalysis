@@ -5,27 +5,25 @@ This module evaluate the reconciliation of expression data against FBA
 
 module model_analysis_expession {
 	/*
-	A string representing a fbamodel id.
-	*/
-	typedef string fbamodel_id;
-
-	/*
-
-	/*
-	A string representing a fba object.
+	A string representing a fba_id.
 	*/
 	typedef string fba_id;
-
-	/*
 
 	/*
 	A string representing a expression matrix.
 	*/
 	typedef string expression_series_ref;
+
 	/*
 	A string representing a expression threshold.
 	*/
+
 	typedef float expression_cutoff;
+	/*
+	A string representing a expression condition.
+
+	*/
+	typedef float expression_condition;
 
 	/*
 	A string representing a workspace name.
@@ -90,5 +88,5 @@ module model_analysis_expession {
         } FBAPathwayAnalysis;
 
 
-	funcdef exp_analysis(workspace_name,fbamodel_id, fba_id, expression_series_ref, expression_cutoff) returns (FBAPathwayAnalysis) authentication required;
+	funcdef exp_analysis(workspace_name,fba_id, expression_series_ref, expression_condition, expression_cutoff) returns (FBAPathwayAnalysis) authentication required;
 };

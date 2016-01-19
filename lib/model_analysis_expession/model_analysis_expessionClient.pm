@@ -112,7 +112,7 @@ sub new
 
 =head2 exp_analysis
 
-  $return = $obj->exp_analysis($workspace_name, $fbamodel_id, $fba_id, $expression_series_ref, $expression_cutoff)
+  $return = $obj->exp_analysis($workspace_name, $fba_id, $expression_series_ref, $expression_condition, $expression_cutoff)
 
 =over 4
 
@@ -122,15 +122,15 @@ sub new
 
 <pre>
 $workspace_name is a model_analysis_expession.workspace_name
-$fbamodel_id is a model_analysis_expession.fbamodel_id
 $fba_id is a model_analysis_expession.fba_id
 $expression_series_ref is a model_analysis_expession.expression_series_ref
+$expression_condition is a model_analysis_expession.expression_condition
 $expression_cutoff is a model_analysis_expession.expression_cutoff
 $return is a model_analysis_expession.FBAPathwayAnalysis
 workspace_name is a string
-fbamodel_id is a string
 fba_id is a string
 expression_series_ref is a string
+expression_condition is a float
 expression_cutoff is a float
 FBAPathwayAnalysis is a reference to a hash where the following keys are defined:
 	pathwayType has a value which is a string
@@ -172,15 +172,15 @@ FBAPathwayAnalysisFeature is a reference to a hash where the following keys are 
 =begin text
 
 $workspace_name is a model_analysis_expession.workspace_name
-$fbamodel_id is a model_analysis_expession.fbamodel_id
 $fba_id is a model_analysis_expession.fba_id
 $expression_series_ref is a model_analysis_expession.expression_series_ref
+$expression_condition is a model_analysis_expession.expression_condition
 $expression_cutoff is a model_analysis_expession.expression_cutoff
 $return is a model_analysis_expession.FBAPathwayAnalysis
 workspace_name is a string
-fbamodel_id is a string
 fba_id is a string
 expression_series_ref is a string
+expression_condition is a float
 expression_cutoff is a float
 FBAPathwayAnalysis is a reference to a hash where the following keys are defined:
 	pathwayType has a value which is a string
@@ -238,13 +238,13 @@ FBAPathwayAnalysisFeature is a reference to a hash where the following keys are 
 							       "Invalid argument count for function exp_analysis (received $n, expecting 5)");
     }
     {
-	my($workspace_name, $fbamodel_id, $fba_id, $expression_series_ref, $expression_cutoff) = @args;
+	my($workspace_name, $fba_id, $expression_series_ref, $expression_condition, $expression_cutoff) = @args;
 
 	my @_bad_arguments;
         (!ref($workspace_name)) or push(@_bad_arguments, "Invalid type for argument 1 \"workspace_name\" (value was \"$workspace_name\")");
-        (!ref($fbamodel_id)) or push(@_bad_arguments, "Invalid type for argument 2 \"fbamodel_id\" (value was \"$fbamodel_id\")");
-        (!ref($fba_id)) or push(@_bad_arguments, "Invalid type for argument 3 \"fba_id\" (value was \"$fba_id\")");
-        (!ref($expression_series_ref)) or push(@_bad_arguments, "Invalid type for argument 4 \"expression_series_ref\" (value was \"$expression_series_ref\")");
+        (!ref($fba_id)) or push(@_bad_arguments, "Invalid type for argument 2 \"fba_id\" (value was \"$fba_id\")");
+        (!ref($expression_series_ref)) or push(@_bad_arguments, "Invalid type for argument 3 \"expression_series_ref\" (value was \"$expression_series_ref\")");
+        (!ref($expression_condition)) or push(@_bad_arguments, "Invalid type for argument 4 \"expression_condition\" (value was \"$expression_condition\")");
         (!ref($expression_cutoff)) or push(@_bad_arguments, "Invalid type for argument 5 \"expression_cutoff\" (value was \"$expression_cutoff\")");
         if (@_bad_arguments) {
 	    my $msg = "Invalid arguments passed to exp_analysis:\n" . join("", map { "\t$_\n" } @_bad_arguments);
@@ -334,37 +334,6 @@ sub _validate_version {
 
 
 
-=head2 fbamodel_id
-
-=over 4
-
-
-
-=item Description
-
-A string representing a fbamodel id.
-
-
-=item Definition
-
-=begin html
-
-<pre>
-a string
-</pre>
-
-=end html
-
-=begin text
-
-a string
-
-=end text
-
-=back
-
-
-
 =head2 fba_id
 
 =over 4
@@ -373,8 +342,7 @@ a string
 
 =item Description
 
-/*
-        A string representing a fba object.
+A string representing a fba_id.
 
 
 =item Definition
@@ -405,8 +373,7 @@ a string
 
 =item Description
 
-/*
-        A string representing a expression matrix.
+A string representing a expression matrix.
 
 
 =item Definition
@@ -438,6 +405,37 @@ a string
 =item Description
 
 A string representing a expression threshold.
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a float
+</pre>
+
+=end html
+
+=begin text
+
+a float
+
+=end text
+
+=back
+
+
+
+=head2 expression_condition
+
+=over 4
+
+
+
+=item Description
+
+A string representing a expression condition.
 
 
 =item Definition

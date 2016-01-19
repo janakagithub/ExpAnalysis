@@ -53,7 +53,7 @@ sub new
 
 =head2 exp_analysis
 
-  $return = $obj->exp_analysis($workspace_name, $fbamodel_id, $fba_id, $expression_series_ref, $expression_cutoff)
+  $return = $obj->exp_analysis($workspace_name, $fba_id, $expression_series_ref, $expression_condition, $expression_cutoff)
 
 =over 4
 
@@ -63,15 +63,15 @@ sub new
 
 <pre>
 $workspace_name is a model_analysis_expession.workspace_name
-$fbamodel_id is a model_analysis_expession.fbamodel_id
 $fba_id is a model_analysis_expession.fba_id
 $expression_series_ref is a model_analysis_expession.expression_series_ref
+$expression_condition is a model_analysis_expession.expression_condition
 $expression_cutoff is a model_analysis_expession.expression_cutoff
 $return is a model_analysis_expession.FBAPathwayAnalysis
 workspace_name is a string
-fbamodel_id is a string
 fba_id is a string
 expression_series_ref is a string
+expression_condition is a float
 expression_cutoff is a float
 FBAPathwayAnalysis is a reference to a hash where the following keys are defined:
 	pathwayType has a value which is a string
@@ -113,15 +113,15 @@ FBAPathwayAnalysisFeature is a reference to a hash where the following keys are 
 =begin text
 
 $workspace_name is a model_analysis_expession.workspace_name
-$fbamodel_id is a model_analysis_expession.fbamodel_id
 $fba_id is a model_analysis_expession.fba_id
 $expression_series_ref is a model_analysis_expession.expression_series_ref
+$expression_condition is a model_analysis_expession.expression_condition
 $expression_cutoff is a model_analysis_expession.expression_cutoff
 $return is a model_analysis_expession.FBAPathwayAnalysis
 workspace_name is a string
-fbamodel_id is a string
 fba_id is a string
 expression_series_ref is a string
+expression_condition is a float
 expression_cutoff is a float
 FBAPathwayAnalysis is a reference to a hash where the following keys are defined:
 	pathwayType has a value which is a string
@@ -172,13 +172,13 @@ FBAPathwayAnalysisFeature is a reference to a hash where the following keys are 
 sub exp_analysis
 {
     my $self = shift;
-    my($workspace_name, $fbamodel_id, $fba_id, $expression_series_ref, $expression_cutoff) = @_;
+    my($workspace_name, $fba_id, $expression_series_ref, $expression_condition, $expression_cutoff) = @_;
 
     my @_bad_arguments;
     (!ref($workspace_name)) or push(@_bad_arguments, "Invalid type for argument \"workspace_name\" (value was \"$workspace_name\")");
-    (!ref($fbamodel_id)) or push(@_bad_arguments, "Invalid type for argument \"fbamodel_id\" (value was \"$fbamodel_id\")");
     (!ref($fba_id)) or push(@_bad_arguments, "Invalid type for argument \"fba_id\" (value was \"$fba_id\")");
     (!ref($expression_series_ref)) or push(@_bad_arguments, "Invalid type for argument \"expression_series_ref\" (value was \"$expression_series_ref\")");
+    (!ref($expression_condition)) or push(@_bad_arguments, "Invalid type for argument \"expression_condition\" (value was \"$expression_condition\")");
     (!ref($expression_cutoff)) or push(@_bad_arguments, "Invalid type for argument \"expression_cutoff\" (value was \"$expression_cutoff\")");
     if (@_bad_arguments) {
 	my $msg = "Invalid arguments passed to exp_analysis:\n" . join("", map { "\t$_\n" } @_bad_arguments);
@@ -192,35 +192,37 @@ sub exp_analysis
 
     my $token=$ctx->token;
     my $wshandle=Bio::KBase::workspace::Client->new($self->{'workspace-url'},token=>$token);
-    my $fm=$wshandle->get_objects([{workspace=>$workspace_name,name=>$fbamodel_id}]);
     my $fb=$wshandle->get_objects([{workspace=>$workspace_name,name=>$fba_id}]);
     my $em=$wshandle->get_objects([{workspace=>$workspace_name,name=>$expression_series_ref}]);
     my $bc=$wshandle->get_objects([{workspace=>'kbase',name=>'plantdefault_obs'}]);
-
+    my $fm = $wshandle->get_objects([{ref=>$fb->[0]->{info}->[10]->{Model}}]);
 	my $expAnalysis = {
 		pathwayType => "KEGG",
 		expression_matrix_ref => $em->[0]->{info}->[6]."/".$em->[0]->{info}->[0]."/".$em->[0]->{info}->[4],
-		expression_condition => "",
+		expression_condition => $expression_condition,
 		fbamodel_ref => $fm->[0]->{info}->[6]."/".$fm->[0]->{info}->[0]."/".$fm->[0]->{info}->[4],
 		fba_ref => $fb->[0]->{info}->[6]."/".$fb->[0]->{info}->[0]."/".$fb->[0]->{info}->[4],
     	pathways => []
     };
 
+
     my %ExpG;
     my $exp_constant =0.4;
+    $expression_cutoff =~ s/^\s+|\s+$//g;
     my $expS = $em->[0]->{data}->{data};
     my $conditions= $expS->{col_ids};
     my $rows = $expS->{row_ids};
     my $colms = $expS->{values};
 
-    # User should specify which condition to use, if not give condition #1 in the row will be used
-    my $user_condition;
+    # User should specify which condition to use, if not condition in the first row will be used
+    #my $user_condition;
+    $expression_condition =~ s/^\s+|\s+$//g;
     my $condition;
     for (my$i=0; $i< @{$conditions}; $i++){
     	my $each_condition = $conditions->[$i];
-    	if ($user_condition eq $each_condition){
+    	if ($each_condition eq $expression_condition){
 
-    		$condition = $user_condition;
+    		$condition = $expression_condition;
     		last;
        	}
        	else{
@@ -373,7 +375,6 @@ sub exp_analysis
 
 	}
 
-
 	my $output = {
     	pathwayName => "",
     	pathwayId => 0,
@@ -500,7 +501,7 @@ sub exp_analysis
 	               	$output->{gsrFluxMExpM}=$kfx3;
 	               	$output->{gpRxnsFluxP}=$kfx4;
 	               	$output->{pathwayName}=$KM{$k};
-	               	$output->{pathwayId}=0000;
+	               	$output->{pathwayId}=$k;
 	               	push (@{$expAnalysis->{pathways}}, $output);
 
 
@@ -543,7 +544,6 @@ sub exp_analysis
 
     my $meta = $wshandle->save_objects($saveObjectParams);
 
-	print &Dumper ($meta);
 	$return = { 'expAnalysis' => $meta};
 
     #END exp_analysis
@@ -598,37 +598,6 @@ sub version {
 
 
 
-=head2 fbamodel_id
-
-=over 4
-
-
-
-=item Description
-
-A string representing a fbamodel id.
-
-
-=item Definition
-
-=begin html
-
-<pre>
-a string
-</pre>
-
-=end html
-
-=begin text
-
-a string
-
-=end text
-
-=back
-
-
-
 =head2 fba_id
 
 =over 4
@@ -637,8 +606,7 @@ a string
 
 =item Description
 
-/*
-        A string representing a fba object.
+A string representing a fba_id.
 
 
 =item Definition
@@ -669,8 +637,7 @@ a string
 
 =item Description
 
-/*
-        A string representing a expression matrix.
+A string representing a expression matrix.
 
 
 =item Definition
@@ -702,6 +669,37 @@ a string
 =item Description
 
 A string representing a expression threshold.
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a float
+</pre>
+
+=end html
+
+=begin text
+
+a float
+
+=end text
+
+=back
+
+
+
+=head2 expression_condition
+
+=over 4
+
+
+
+=item Description
+
+A string representing a expression condition.
 
 
 =item Definition

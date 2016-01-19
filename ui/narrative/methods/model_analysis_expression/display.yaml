@@ -28,20 +28,11 @@ suggestions:
 #
 
 parameters :
-    fbamodel_id :
+    fba_id :
         ui-name : |
-            FBA Model
+            FBA
         short-hint : |
-            Name of the FBA Model
-        long-hint  : |
-            The FBA model that is related to the selected FBA and assoicated Expression data.
-
-
-    fba_ref :
-        ui-name : |
-            FBA assoicated with selected Model
-        short-hint : |
-            Name of the Flux Balance Analysis
+            Name of the Flux Balance Analysis to be analysed
         long-hint  : |
             The FBA object that is related to the selected Model and assoicated Expression data.
 
@@ -52,6 +43,14 @@ parameters :
             Name of the Expression Data Set
         long-hint  : |
             The Expression Matrix is related to the selected Model and assoicated FBA. The data is from expression matrix will be normalized and rank to a scale of 0 to 1.
+
+    expression_condition :
+        ui-name : |
+            Expression Condition
+        short-hint : |
+            Name of the Expression Condition. Condition in the first row will be used by default if left blank
+        long-hint  : |
+            An Expression Matrix may have multiple expression coditions listed. If left blank, expression condition in the first row will be used by default.
 
     expression_cutoff :
         ui-name : |
