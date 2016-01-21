@@ -55,7 +55,19 @@
 		    "text_options" : {
 		    "validate_as": "float"
 	        }
-         }
+         },
+        {
+    		"id" : "output_expAnalysis",
+    		"optional" : false,
+    		"advanced" : false,
+    		"allow_multiple" : false,
+    		"default_values" : [ "" ],
+    		"field_type" : "text",
+    		"text_options" : {
+      		"valid_ws_types" : [ "KBaseFBA.FBAPathwayAnalysis" ],
+      		"is_output_name":true
+    		}
+  		 }
 
 	],
 	"behavior": {
@@ -83,18 +95,26 @@
 				{
 					"input_parameter": "expression_cutoff",
 					"target_argument_position": "4"
+				},
+				{
+					"input_parameter": "output_expAnalysis",
+					"target_argument_position": "5"
 				}
 
 
 			],
 			"output_mapping": [
 				{
-					"service_method_output_path": [0, "expAnalysis"],
-					"target_property": "expAnalysis"
-				},
+         			"constant_value": "KBaseFBA.FBAPathwayAnalysis",
+         			"target_property": "type"
+       			},
+       			{
+         			"input_parameter": "output_expAnalysis",
+         			"target_property": "obj"
+       			},
 				{
 					"narrative_system_variable": "workspace",
-					"target_property": "workspace_name"
+					"target_property": "ws"
 				}
 
 

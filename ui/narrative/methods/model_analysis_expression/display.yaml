@@ -60,5 +60,13 @@ parameters :
         long-hint  : |
             All genes above the mentioned threshold be considered as expessed. 0.4 is ued by default.
 
+    output_expAnalysis :
+        ui-name : |
+            Output name
+        short-hint : |
+            Output name  of data object
+        long-hint  : |
+            Analysis data will be stored in this object.
+
 description : |
 	<p>This method takes a FBA model, a FBA and a related expression data set inorder to evaluate how well the expression data fit with the FBA.</p>

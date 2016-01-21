@@ -23,7 +23,7 @@ module model_analysis_expession {
 	A string representing a expression condition.
 
 	*/
-	typedef float expression_condition;
+	typedef string expression_condition;
 
 	/*
 	A string representing a workspace name.
