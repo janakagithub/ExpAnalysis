@@ -171,10 +171,10 @@ class model_analysis_expession(object):
             raise ServerError('Unknown', 0, 'An unknown server error occurred')
         return resp['result']
  
-    def exp_analysis(self, workspace_name, fba_id, expression_series_ref, expression_condition, expression_cutoff, json_rpc_context = None):
+    def exp_analysis(self, workspace_name, fba_id, expression_series_ref, expression_condition, expression_cutoff, output_expAnalysis, json_rpc_context = None):
         if json_rpc_context and type(json_rpc_context) is not dict:
             raise ValueError('Method exp_analysis: argument json_rpc_context is not type dict as required.')
         resp = self._call('model_analysis_expession.exp_analysis',
-                          [workspace_name, fba_id, expression_series_ref, expression_condition, expression_cutoff], json_rpc_context)
+                          [workspace_name, fba_id, expression_series_ref, expression_condition, expression_cutoff, output_expAnalysis], json_rpc_context)
         return resp[0]
  

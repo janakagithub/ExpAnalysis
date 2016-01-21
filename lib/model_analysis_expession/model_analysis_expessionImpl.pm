@@ -53,7 +53,7 @@ sub new
 
 =head2 exp_analysis
 
-  $return = $obj->exp_analysis($workspace_name, $fba_id, $expression_series_ref, $expression_condition, $expression_cutoff)
+  $return = $obj->exp_analysis($workspace_name, $fba_id, $expression_series_ref, $expression_condition, $expression_cutoff, $output_expAnalysis)
 
 =over 4
 
@@ -67,12 +67,14 @@ $fba_id is a model_analysis_expession.fba_id
 $expression_series_ref is a model_analysis_expession.expression_series_ref
 $expression_condition is a model_analysis_expession.expression_condition
 $expression_cutoff is a model_analysis_expession.expression_cutoff
+$output_expAnalysis is a model_analysis_expession.output_expAnalysis
 $return is a model_analysis_expession.FBAPathwayAnalysis
 workspace_name is a string
 fba_id is a string
 expression_series_ref is a string
-expression_condition is a float
+expression_condition is a string
 expression_cutoff is a float
+output_expAnalysis is a string
 FBAPathwayAnalysis is a reference to a hash where the following keys are defined:
 	pathwayType has a value which is a string
 	expression_matrix_ref has a value which is a model_analysis_expession.expression_matrix_ref
@@ -117,12 +119,14 @@ $fba_id is a model_analysis_expession.fba_id
 $expression_series_ref is a model_analysis_expession.expression_series_ref
 $expression_condition is a model_analysis_expession.expression_condition
 $expression_cutoff is a model_analysis_expession.expression_cutoff
+$output_expAnalysis is a model_analysis_expession.output_expAnalysis
 $return is a model_analysis_expession.FBAPathwayAnalysis
 workspace_name is a string
 fba_id is a string
 expression_series_ref is a string
-expression_condition is a float
+expression_condition is a string
 expression_cutoff is a float
+output_expAnalysis is a string
 FBAPathwayAnalysis is a reference to a hash where the following keys are defined:
 	pathwayType has a value which is a string
 	expression_matrix_ref has a value which is a model_analysis_expession.expression_matrix_ref
@@ -172,7 +176,7 @@ FBAPathwayAnalysisFeature is a reference to a hash where the following keys are 
 sub exp_analysis
 {
     my $self = shift;
-    my($workspace_name, $fba_id, $expression_series_ref, $expression_condition, $expression_cutoff) = @_;
+    my($workspace_name, $fba_id, $expression_series_ref, $expression_condition, $expression_cutoff, $output_expAnalysis) = @_;
 
     my @_bad_arguments;
     (!ref($workspace_name)) or push(@_bad_arguments, "Invalid type for argument \"workspace_name\" (value was \"$workspace_name\")");
@@ -180,6 +184,7 @@ sub exp_analysis
     (!ref($expression_series_ref)) or push(@_bad_arguments, "Invalid type for argument \"expression_series_ref\" (value was \"$expression_series_ref\")");
     (!ref($expression_condition)) or push(@_bad_arguments, "Invalid type for argument \"expression_condition\" (value was \"$expression_condition\")");
     (!ref($expression_cutoff)) or push(@_bad_arguments, "Invalid type for argument \"expression_cutoff\" (value was \"$expression_cutoff\")");
+    (!ref($output_expAnalysis)) or push(@_bad_arguments, "Invalid type for argument \"output_expAnalysis\" (value was \"$output_expAnalysis\")");
     if (@_bad_arguments) {
 	my $msg = "Invalid arguments passed to exp_analysis:\n" . join("", map { "\t$_\n" } @_bad_arguments);
 	Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
@@ -539,7 +544,7 @@ sub exp_analysis
 	$saveObjectParams->{workspace}=$workspace_name;
     $saveObjectParams->{objects}->[0]->{type} = "KBaseFBA.FBAPathwayAnalysis";
     $saveObjectParams->{objects}->[0]->{data} = $expAnalysis;
-    $saveObjectParams->{objects}->[0]->{name} = $fba_id.".".$expression_series_ref."Analysis";
+    $saveObjectParams->{objects}->[0]->{name} = $output_expAnalysis;
 
 
     my $meta = $wshandle->save_objects($saveObjectParams);
@@ -707,14 +712,14 @@ A string representing a expression condition.
 =begin html
 
 <pre>
-a float
+a string
 </pre>
 
 =end html
 
 =begin text
 
-a float
+a string
 
 =end text
 
@@ -731,6 +736,37 @@ a float
 =item Description
 
 A string representing a workspace name.
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a string
+</pre>
+
+=end html
+
+=begin text
+
+a string
+
+=end text
+
+=back
+
+
+
+=head2 output_expAnalysis
+
+=over 4
+
+
+
+=item Description
+
+A string representing a output name.
 
 
 =item Definition

@@ -30,6 +30,10 @@ module model_analysis_expession {
 	*/
 	typedef string workspace_name;
 
+	/*
+	A string representing a output name.
+	*/
+	typedef string output_expAnalysis;
  	/*
 		Reference to expression data
 		@id ws KBaseFeatureValues.ExpressionMatrix
@@ -88,5 +92,5 @@ module model_analysis_expession {
         } FBAPathwayAnalysis;
 
 
-	funcdef exp_analysis(workspace_name,fba_id, expression_series_ref, expression_condition, expression_cutoff) returns (FBAPathwayAnalysis) authentication required;
+	funcdef exp_analysis(workspace_name,fba_id, expression_series_ref, expression_condition, expression_cutoff, output_expAnalysis) returns (FBAPathwayAnalysis) authentication required;
 };
