@@ -548,7 +548,7 @@ sub exp_analysis
 
 
     my $meta = $wshandle->save_objects($saveObjectParams);
-
+    print &Dumper ($expAnalysis);
 	$return = { 'expAnalysis' => $meta};
 
     #END exp_analysis
